@@ -1,0 +1,5 @@
+django>=5.0
+yfinance
+pandas
+numpy
+matplotlib

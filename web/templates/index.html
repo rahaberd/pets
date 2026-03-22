@@ -1,0 +1,332 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quant Portfolio</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="logo">
+        <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+        </svg>
+        <span class="logo-text">Quant Portfolio</span>
+      </div>
+      <p class="header-tagline">Quantitative tools built while learning quant finance</p>
+    </div>
+  </header>
+
+  <div class="layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <nav class="sidebar-nav">
+        <button class="nav-item active" data-tab="math">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="19" y1="5" x2="5" y2="19"></line>
+              <circle cx="6.5" cy="6.5" r="2.5"></circle>
+              <circle cx="17.5" cy="17.5" r="2.5"></circle>
+            </svg>
+          </span>
+          <span class="nav-label">Math Tools</span>
+        </button>
+        <button class="nav-item" data-tab="backtest">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+            </svg>
+          </span>
+          <span class="nav-label">Backtest Engine</span>
+        </button>
+        <button class="nav-item" data-tab="news">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 22h16a2 2 0 002-2V4a2 2 0 00-2-2H8a2 2 0 00-2 2v16a2 2 0 01-2 2zm0 0a2 2 0 01-2-2v-9c0-1.1.9-2 2-2h2"></path>
+              <path d="M18 14h-8M15 18h-5M10 6h8v4h-8z"></path>
+            </svg>
+          </span>
+          <span class="nav-label">News Aggregator</span>
+        </button>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main">
+
+      <!-- ======================================================= -->
+      <!-- MATH TOOLS PANEL                                         -->
+      <!-- ======================================================= -->
+      <section class="panel active" id="panel-math">
+        <div class="panel-header">
+          <h1>Math Tools</h1>
+          <p>Combinatorics calculators for probability and statistical analysis.</p>
+        </div>
+
+        <div class="calc-grid">
+
+          <!-- Factorial -->
+          <div class="card">
+            <div class="card-header">
+              <h3>Factorial</h3>
+              <span class="card-badge">n!</span>
+            </div>
+            <p class="card-desc">Calculates the product of all positive integers up to n.</p>
+            <div class="form-row">
+              <div class="form-field">
+                <label for="fact-n">n</label>
+                <input id="fact-n" type="number" min="0" max="10000" placeholder="e.g. 10" />
+              </div>
+            </div>
+            <button class="btn-primary" onclick="calcFactorial()">Calculate</button>
+            <div class="result-box" id="fact-result"></div>
+          </div>
+
+          <!-- Combination -->
+          <div class="card">
+            <div class="card-header">
+              <h3>Combination</h3>
+              <span class="card-badge">C(n, k)</span>
+            </div>
+            <p class="card-desc">Number of ways to choose k items from n without order.</p>
+            <div class="form-row">
+              <div class="form-field">
+                <label for="comb-n">n</label>
+                <input id="comb-n" type="number" min="0" placeholder="e.g. 10" />
+              </div>
+              <div class="form-field">
+                <label for="comb-k">k</label>
+                <input id="comb-k" type="number" min="0" placeholder="e.g. 3" />
+              </div>
+            </div>
+            <button class="btn-primary" onclick="calcCombination()">Calculate</button>
+            <div class="result-box" id="comb-result"></div>
+          </div>
+
+          <!-- Permutations -->
+          <div class="card">
+            <div class="card-header">
+              <h3>Word Permutations</h3>
+              <span class="card-badge">n! / dup!</span>
+            </div>
+            <p class="card-desc">Unique letter arrangements of a word, accounting for duplicates.</p>
+            <div class="form-row">
+              <div class="form-field" style="flex:1">
+                <label for="perm-word">Word</label>
+                <input id="perm-word" type="text" placeholder="e.g. MISSISSIPPI" />
+              </div>
+            </div>
+            <button class="btn-primary" onclick="calcPermutations()">Calculate</button>
+            <div class="result-box" id="perm-result"></div>
+          </div>
+
+          <!-- Combination Product -->
+          <div class="card">
+            <div class="card-header">
+              <h3>Combination Product</h3>
+              <span class="card-badge">&#x220f; C(n, k)</span>
+            </div>
+            <p class="card-desc">Product of multiple C(n, k) values — useful for multi-step selections.</p>
+            <div id="pair-list" class="pair-list">
+              <div class="pair-row">
+                <div class="pair-inputs">
+                  <div class="form-field">
+                    <label>n</label>
+                    <input type="number" class="pair-n" min="0" placeholder="n" />
+                  </div>
+                  <div class="form-field">
+                    <label>k</label>
+                    <input type="number" class="pair-k" min="0" placeholder="k" />
+                  </div>
+                </div>
+                <button class="btn-remove" onclick="removePair(this)" title="Remove">&#x2715;</button>
+              </div>
+            </div>
+            <div class="pair-actions">
+              <button class="btn-secondary" onclick="addPair()">+ Add Pair</button>
+              <button class="btn-primary" onclick="calcCombProduct()">Calculate</button>
+            </div>
+            <div class="result-box" id="prod-result"></div>
+          </div>
+
+        </div><!-- /.calc-grid -->
+      </section>
+
+      <!-- ======================================================= -->
+      <!-- BACKTEST ENGINE PANEL                                    -->
+      <!-- ======================================================= -->
+      <section class="panel" id="panel-backtest">
+        <div class="panel-header">
+          <h1>Backtest Engine</h1>
+          <p>Z-Score mean reversion strategy: buy when price is below its rolling mean, sell when above.</p>
+        </div>
+
+        <div class="backtest-layout">
+
+          <!-- Config Form -->
+          <div class="card backtest-form-card">
+            <h3 class="card-title">Configuration</h3>
+
+            <div class="form-field">
+              <label for="bt-ticker">Ticker Symbol</label>
+              <input id="bt-ticker" type="text" value="SPY" placeholder="e.g. SPY, AAPL, MSFT" style="text-transform:uppercase" />
+            </div>
+
+            <div class="form-row">
+              <div class="form-field">
+                <label for="bt-start">Start Date</label>
+                <input id="bt-start" type="date" value="2020-01-01" />
+              </div>
+              <div class="form-field">
+                <label for="bt-end">End Date</label>
+                <input id="bt-end" type="date" value="2024-01-01" />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-field">
+                <label for="bt-window">
+                  Rolling Window
+                  <span class="label-hint">days for SMA / std</span>
+                </label>
+                <input id="bt-window" type="number" value="20" min="2" max="500" />
+              </div>
+              <div class="form-field">
+                <label for="bt-zthresh">
+                  Z-Score Threshold
+                  <span class="label-hint">signal trigger level</span>
+                </label>
+                <input id="bt-zthresh" type="number" value="2.0" min="0.1" step="0.1" />
+              </div>
+            </div>
+
+            <div class="strategy-info">
+              <p><strong>Signal Logic:</strong></p>
+              <ul>
+                <li>Buy (long) if Z-Score &lt; &minus;&lt;threshold&gt;</li>
+                <li>Sell (short) if Z-Score &gt; +&lt;threshold&gt;</li>
+                <li>Hold otherwise</li>
+              </ul>
+            </div>
+
+            <button class="btn-primary btn-full" id="bt-run-btn" onclick="runBacktest()">
+              Run Backtest
+            </button>
+            <div id="bt-error" class="error-msg" style="display:none"></div>
+          </div>
+
+          <!-- Results -->
+          <div class="backtest-results" id="bt-results" style="display:none">
+
+            <div id="bt-loading" class="loading-state" style="display:none">
+              <div class="spinner"></div>
+              <p>Fetching data and running simulation&hellip;</p>
+            </div>
+
+            <div id="bt-output">
+              <div class="metrics-grid" id="bt-metrics"></div>
+
+              <div class="card chart-card">
+                <h3 class="card-title">Equity Curve &mdash; <span id="bt-chart-title"></span></h3>
+                <div class="chart-wrapper">
+                  <canvas id="bt-chart"></canvas>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div><!-- /.backtest-layout -->
+      </section>
+
+      <!-- ======================================================= -->
+      <!-- NEWS AGGREGATOR PANEL                                    -->
+      <!-- ======================================================= -->
+      <section class="panel" id="panel-news">
+        <div class="panel-header">
+          <h1>News Aggregator</h1>
+          <p>Live financial news pulled from RSS feeds and NewsAPI with WebSocket streaming.</p>
+        </div>
+
+        <div class="news-info-layout">
+          <div class="card news-card">
+            <h3 class="card-title">About this tool</h3>
+            <p>The News Aggregator is a standalone <strong>FastAPI</strong> application with its own frontend. It runs as a separate server and is not embedded here.</p>
+
+            <div class="feature-list">
+              <div class="feature-item">
+                <span class="feature-dot"></span>
+                <div>
+                  <strong>Dual-source ingestion</strong>
+                  <p>Fetches articles from configurable RSS feeds (BBC, Reuters) and optionally NewsAPI.</p>
+                </div>
+              </div>
+              <div class="feature-item">
+                <span class="feature-dot"></span>
+                <div>
+                  <strong>Real-time WebSocket streaming</strong>
+                  <p>New articles are pushed to all connected clients as they are ingested.</p>
+                </div>
+              </div>
+              <div class="feature-item">
+                <span class="feature-dot"></span>
+                <div>
+                  <strong>Persistent SQLite storage</strong>
+                  <p>Articles are deduplicated by URL and stored locally via SQLAlchemy.</p>
+                </div>
+              </div>
+              <div class="feature-item">
+                <span class="feature-dot"></span>
+                <div>
+                  <strong>Background polling</strong>
+                  <p>Automatic re-fetch every 15 minutes (configurable via <code>.env</code>).</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="news-launch">
+              <div class="launch-instructions">
+                <p><strong>To launch the News Aggregator:</strong></p>
+                <div class="code-block">
+                  <code>cd news-aggregator</code>
+                  <code>pip install -r requirements.txt</code>
+                  <code>cp .env.example .env</code>
+                  <code>uvicorn app.main:app --reload</code>
+                </div>
+              </div>
+              <a class="btn-primary btn-launch" href="http://127.0.0.1:8000" target="_blank" rel="noopener">
+                Open News Aggregator
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                  <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"></path>
+                  <polyline points="15 3 21 3 21 9"></polyline>
+                  <line x1="10" y1="14" x2="21" y2="3"></line>
+                </svg>
+              </a>
+            </div>
+          </div>
+
+          <div class="card stack-card">
+            <h3 class="card-title">Tech Stack</h3>
+            <ul class="stack-list">
+              <li><span class="stack-tag">FastAPI</span> Web framework + REST API</li>
+              <li><span class="stack-tag">Uvicorn</span> ASGI server</li>
+              <li><span class="stack-tag">SQLAlchemy</span> ORM / SQLite persistence</li>
+              <li><span class="stack-tag">httpx</span> Async HTTP client</li>
+              <li><span class="stack-tag">feedparser</span> RSS parsing</li>
+              <li><span class="stack-tag">WebSockets</span> Real-time push delivery</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="{% static 'js/app.js' %}"></script>
+</body>
+</html>
